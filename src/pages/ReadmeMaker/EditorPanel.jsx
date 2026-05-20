@@ -34,6 +34,10 @@ export default function EditorPanel({
   selectedTechs, toggleTech,
   selectedBadges, toggleBadge,
   screenshots, addScreenshots, removeScreenshot,
+  isCollapsed,
+  toggleCollapse,
+  isFocusMode,
+  toggleFocusMode,
 }) {
   const fileInputRef = useRef(null);
   const dropZoneRef = useRef(null);
@@ -58,7 +62,26 @@ export default function EditorPanel({
   }
 
   return (
-    <div className="editor">
+    <div className={`editor${isCollapsed ? ' collapsed' : ''}`}>
+      <div className="editor-header">
+        <div className="editor-header-title">✍️ Form Editor</div>
+        <div className="editor-header-actions">
+          <button
+            className={`hbtn mini-btn ${isFocusMode ? 'active' : ''}`}
+            onClick={toggleFocusMode}
+            title={isFocusMode ? "Exit Focus Mode" : "Focus Mode"}
+          >
+            ✨ {isFocusMode ? "Exit Focus" : "Focus Mode"}
+          </button>
+          <button
+            className="hbtn mini-btn"
+            onClick={toggleCollapse}
+            title="Collapse Editor"
+          >
+            ✕ Collapse
+          </button>
+        </div>
+      </div>
       <div className="editor-inner" id="editorInner">
 
         <EditorSection num={1} title="Project Title & Badges" hidden={!sectionState.title}>

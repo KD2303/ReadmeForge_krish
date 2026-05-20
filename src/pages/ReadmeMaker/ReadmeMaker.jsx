@@ -26,6 +26,80 @@ export default function ReadmeMaker() {
 
   const [activeTemplate, setActiveTemplate] = useState(null);
 
+  // Panel state hooks
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [editorCollapsed, setEditorCollapsed] = useState(false);
+  const [previewCollapsed, setPreviewCollapsed] = useState(false);
+  const [previewExpanded, setPreviewExpanded] = useState(false);
+  const [focusMode, setFocusMode] = useState(false);
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      if (!document.fullscreenElement && focusMode) {
+        setFocusMode(false);
+        setSidebarCollapsed(false);
+        setPreviewCollapsed(false);
+      }
+    };
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+  }, [focusMode]);
+
+  const handleToggleFocusMode = async () => {
+    const next = !focusMode;
+    setFocusMode(next);
+    setSidebarCollapsed(next);
+    setPreviewCollapsed(next);
+    setEditorCollapsed(false);
+    setPreviewExpanded(false);
+
+    try {
+      if (next) {
+        if (document.documentElement.requestFullscreen) {
+          await document.documentElement.requestFullscreen();
+        }
+      } else {
+        if (document.fullscreenElement) {
+          await document.exitFullscreen();
+        }
+      }
+    } catch (err) {
+      console.warn('Fullscreen API error:', err);
+    }
+  };
+
+  const handleToggleSidebar = () => {
+    setSidebarCollapsed(prev => {
+      const next = !prev;
+      if (!next) setFocusMode(false);
+      return next;
+    });
+  };
+
+  const handleTogglePreview = () => {
+    setPreviewCollapsed(prev => {
+      const next = !prev;
+      if (!next) {
+        setFocusMode(false);
+      } else {
+        setPreviewExpanded(false);
+      }
+      return next;
+    });
+  };
+
+  const handleToggleEditor = () => {
+    setEditorCollapsed(prev => {
+      const next = !prev;
+      if (!next) {
+        setPreviewExpanded(false);
+      } else {
+        setPreviewExpanded(true);
+      }
+      return next;
+    });
+  };
+
   const currentMd = useMemo(() =>
     generateMarkdown({ formData, sectionState, selectedTechs, selectedBadges, screenshots, sectionOrder }),
     [formData, sectionState, selectedTechs, selectedBadges, screenshots, sectionOrder]
@@ -78,6 +152,38 @@ export default function ReadmeMaker() {
       <Navbar />
       <div id="app-builder" style={{ paddingTop: 64 }}>
         <header className="header">
+          {/* Header left panel controls */}
+          <div className="header-left" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <button
+              className={`hbtn-control ${sidebarCollapsed ? 'active' : ''}`}
+              onClick={handleToggleSidebar}
+              title={sidebarCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
+            >
+              📁 {sidebarCollapsed ? "Sidebar" : "Sidebar"}
+            </button>
+            <button
+              className={`hbtn-control ${editorCollapsed ? 'active' : ''}`}
+              onClick={handleToggleEditor}
+              title={editorCollapsed ? "Expand Editor" : "Collapse Editor"}
+            >
+              ✍️ {editorCollapsed ? "Editor" : "Editor"}
+            </button>
+            <button
+              className={`hbtn-control ${previewCollapsed ? 'active' : ''}`}
+              onClick={handleTogglePreview}
+              title={previewCollapsed ? "Expand Preview" : "Collapse Preview"}
+            >
+              👁️ {previewCollapsed ? "Preview" : "Preview"}
+            </button>
+            <button
+              className={`hbtn-control primary-focus ${focusMode ? 'active' : ''}`}
+              onClick={handleToggleFocusMode}
+              title={focusMode ? "Exit Focus Mode" : "Focus Mode"}
+            >
+              ✨ Focus Mode
+            </button>
+          </div>
+
           <div className="header-center">
             <span style={{ fontSize: 11, color: 'var(--muted)', fontFamily: '"JetBrains Mono", monospace', marginRight: 4 }}>sections:</span>
             <span id="sectionCount" style={{ fontSize: 12, fontWeight: 700, color: 'var(--accent)' }}>{activeSectionCount}</span>
@@ -108,6 +214,7 @@ export default function ReadmeMaker() {
             toggleTech={toggleTech}
             applyTemplate={handleApplyTemplate}
             activeTemplate={activeTemplate}
+            isCollapsed={sidebarCollapsed}
           />
           <EditorPanel
             formData={formData}
@@ -120,6 +227,10 @@ export default function ReadmeMaker() {
             screenshots={screenshots}
             addScreenshots={addScreenshots}
             removeScreenshot={removeScreenshot}
+            isCollapsed={editorCollapsed}
+            toggleCollapse={handleToggleEditor}
+            isFocusMode={focusMode}
+            toggleFocusMode={handleToggleFocusMode}
           />
           <PreviewPanel
             currentMd={currentMd}
@@ -127,6 +238,10 @@ export default function ReadmeMaker() {
             sectionState={sectionState}
             selectedTechs={selectedTechs}
             screenshots={screenshots}
+            isCollapsed={previewCollapsed}
+            setCollapsed={setPreviewCollapsed}
+            isExpanded={previewExpanded}
+            setExpanded={setPreviewExpanded}
           />
         </div>
       </div>

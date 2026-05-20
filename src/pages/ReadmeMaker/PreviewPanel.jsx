@@ -49,7 +49,7 @@ function calculateQuality({ formData, sectionState, selectedTechs, screenshots }
   return { score: Math.min(score, 100), suggestions };
 }
 
-export default function PreviewPanel({ currentMd, formData, sectionState, selectedTechs, screenshots }) {
+export default function PreviewPanel({ currentMd, formData, sectionState, selectedTechs, screenshots, isCollapsed, setCollapsed, isExpanded, setExpanded }) {
   const toast = useToast();
   const [tab, setTabState] = useState('rendered');
   const [zoom, setZoom] = useState(() => {
@@ -135,7 +135,7 @@ export default function PreviewPanel({ currentMd, formData, sectionState, select
   const zoomPct = Math.round(zoom * 100) + '%';
 
   return (
-    <aside className="preview">
+    <aside className={`preview${isCollapsed ? ' collapsed' : ''}${isExpanded ? ' expanded' : ''}`}>
       <div className="preview-header">
         <div className="preview-tabs">
           <button
@@ -152,6 +152,20 @@ export default function PreviewPanel({ currentMd, formData, sectionState, select
           </button>
         </div>
         <div className="preview-actions">
+          <button
+            className={`hbtn mini-btn ${isExpanded ? 'active' : ''}`}
+            onClick={() => setExpanded(!isExpanded)}
+            title={isExpanded ? "Exit Expand" : "Expand"}
+          >
+            {isExpanded ? "⤓ Shrink" : "⤢ Expand"}
+          </button>
+          <button
+            className="hbtn mini-btn"
+            onClick={() => setCollapsed(true)}
+            title="Collapse Preview"
+          >
+            ✕ Collapse
+          </button>
           <div className="preview-zoom-controls">
             <button className="pbtn" onClick={zoomOut} disabled={zoom <= ZOOM_LEVELS[0]} title="Zoom out (Ctrl -)">−</button>
             <span className="zoom-indicator">{zoomPct}</span>

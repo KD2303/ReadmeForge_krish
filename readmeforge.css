@@ -345,6 +345,24 @@ body.light-mode .hero-title {
   }
 }
 
+@keyframes floatCapsule {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-12px) rotate(3deg);
+  }
+}
+
+@keyframes floatMiniAst {
+  0%, 100% {
+    transform: translateY(0) rotate(-15deg);
+  }
+  50% {
+    transform: translateY(-18px) rotate(-10deg);
+  }
+}
+
 .css-asterisk {
   position: absolute;
   right: 12%;
@@ -395,8 +413,8 @@ body.light-mode .hero-title {
 
 .css-pills {
   position: absolute;
-  right: 25%;
-  bottom: 20%;
+  left: 12%;
+  bottom: 15%;
   width: 160px;
   height: 250px;
   animation: floatSlow 8s ease-in-out infinite;
@@ -444,6 +462,68 @@ body.light-mode .hero-title {
     15px 20px 30px rgba(0, 0, 0, 0.7);
 }
 
+.css-capsule {
+  position: absolute;
+  left: 8%;
+  top: 22%;
+  width: 60px;
+  height: 140px;
+  animation: floatCapsule 10s ease-in-out infinite;
+  z-index: 3;
+  filter: drop-shadow(0 15px 30px rgba(99, 102, 241, 0.15));
+}
+
+.capsule-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 40px;
+  background: linear-gradient(135deg, var(--grad-cyan) 0%, var(--grad-blue) 100%);
+  transform: rotate(-30deg);
+  box-shadow:
+    inset 6px 6px 12px rgba(255, 255, 255, 0.8),
+    inset -6px -6px 15px rgba(59, 130, 246, 0.5),
+    8px 12px 20px rgba(0, 0, 0, 0.5);
+}
+
+.css-mini-asterisk {
+  position: absolute;
+  right: 15%;
+  bottom: 18%;
+  width: 90px;
+  height: 90px;
+  animation: floatMiniAst 7s ease-in-out infinite;
+  z-index: 3;
+  filter: drop-shadow(0 15px 30px rgba(192, 132, 252, 0.15));
+}
+
+.mini-ast-arm {
+  position: absolute;
+  width: 25px;
+  height: 90px;
+  border-radius: 25px;
+  left: 32px;
+  top: 0;
+  box-shadow:
+    inset 3px 3px 8px rgba(255, 255, 255, 0.9),
+    inset -3px -3px 10px rgba(192, 132, 252, 0.6),
+    5px 8px 15px rgba(0, 0, 0, 0.55);
+}
+
+.mini-ast-arm:nth-child(1) {
+  transform: rotate(0deg);
+  background: linear-gradient(180deg, var(--grad-purple) 0%, var(--grad-blue) 100%);
+}
+
+.mini-ast-arm:nth-child(2) {
+  transform: rotate(60deg);
+  background: linear-gradient(120deg, var(--grad-purple) 0%, var(--grad-blue) 100%);
+}
+
+.mini-ast-arm:nth-child(3) {
+  transform: rotate(120deg);
+  background: linear-gradient(60deg, var(--grad-purple) 0%, var(--grad-blue) 100%);
+}
+
 @media (max-width: 1024px) {
   .css-asterisk {
     right: 5%;
@@ -451,9 +531,21 @@ body.light-mode .hero-title {
   }
 
   .css-pills {
-    right: 10%;
+    left: 8%;
     bottom: 25%;
     transform: scale(0.8);
+  }
+
+  .css-capsule {
+    left: 4%;
+    top: 25%;
+    transform: scale(0.7);
+  }
+
+  .css-mini-asterisk {
+    right: 5%;
+    bottom: 22%;
+    transform: scale(0.7);
   }
 }
 
@@ -466,8 +558,22 @@ body.light-mode .hero-title {
 
   .css-pills {
     opacity: 0.4;
-    right: -10%;
+    left: -10%;
     bottom: 30%;
+  }
+
+  .css-capsule {
+    opacity: 0.3;
+    left: -5%;
+    top: 25%;
+    transform: scale(0.6);
+  }
+
+  .css-mini-asterisk {
+    opacity: 0.3;
+    right: -5%;
+    bottom: 25%;
+    transform: scale(0.6);
   }
 
   .hero-title {

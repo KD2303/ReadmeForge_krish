@@ -53,6 +53,12 @@ export default function LandingPage() {
         <div className="css-pills">
           <div className="css-pill" /><div className="css-pill" /><div className="css-pill" />
         </div>
+        <div className="css-capsule">
+          <div className="capsule-inner" />
+        </div>
+        <div className="css-mini-asterisk">
+          <div className="mini-ast-arm" /><div className="mini-ast-arm" /><div className="mini-ast-arm" />
+        </div>
 
         <div className="scroll-action">
           <Link to="/readme-maker" className="scroll-btn">Start Building →</Link>
